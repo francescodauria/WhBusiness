@@ -1,0 +1,16 @@
+{
+  "name": "whbusiness",
+  "version": "1.0.0",
+  "description": "WhatsApp Business API dashboard and webapp",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && npm start",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend\"",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,144 +1,266 @@
+/* ── Panel shell ────────────────────────────────────────── */
 .panel {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;  /* for CallOverlay positioning */
+  background: var(--wa-chat-area-bg);
 }
 
-.empty {
+/* ── Welcome screen (no contact selected) ───────────────── */
+.welcome {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--color-muted);
-  gap: 12px;
+  background: var(--wa-header-bg);
+  border-top: 6px solid var(--wa-green);
 }
 
-.empty span { font-size: 48px; opacity: .4; }
-.empty p    { text-align: center; line-height: 1.6; }
+.welcomeInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 480px;
+  text-align: center;
+  padding: 32px;
+}
 
-/* ── Header ─────────────────────────────────────────── */
+.welcomeIcon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--wa-border);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 8px;
+}
+
+.welcomeTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--wa-text-primary);
+}
+
+.welcomeText {
+  font-size: 13px;
+  color: var(--wa-text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: var(--wa-header-bg);
+  min-height: 59px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--wa-border);
 }
 
-.avatar {
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.headerAvatar {
   width: 40px; height: 40px;
   border-radius: 50%;
-  background: var(--color-primary);
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 16px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 
-.contactName  { font-weight: 600; }
-.contactPhone { font-size: 12px; color: var(--color-muted); }
+.headerName    { font-weight: 600; font-size: 16px; color: var(--wa-text-primary); }
+.headerSub     { font-size: 12px; color: var(--wa-text-secondary); }
 
-/* ── Messages ───────────────────────────────────────── */
+.headerActions {
+  display: flex;
+  gap: 2px;
+}
+
+.iconBtn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--wa-icon);
+  transition: background .15s;
+}
+
+.iconBtn:hover { background: rgba(0,0,0,.06); }
+
+/* ── Messages area ──────────────────────────────────────── */
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 12px 8%;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: #efeae2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3C/svg%3E");
+
+  /* WA wallpaper – subtle repeating pattern on tan background */
+  background-color: #efeae2;
+  background-image:
+    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.015) 0%, transparent 70%);
 }
 
 .loadingMsg, .errorMsg {
   text-align: center;
   padding: 8px;
-  color: var(--color-muted);
+  color: var(--wa-text-secondary);
   font-size: 12px;
-}
-
-.errorMsg { color: var(--color-danger); }
-
-.dateDivider {
-  text-align: center;
-  font-size: 11px;
-  color: var(--color-muted);
-  background: rgba(255,255,255,.7);
-  border-radius: 8px;
-  padding: 3px 10px;
   align-self: center;
-  margin: 8px 0;
 }
 
+.errorMsg { color: var(--wa-danger); }
+
+/* ── Date divider ───────────────────────────────────────── */
+.dateDivider {
+  align-self: center;
+  font-size: 12px;
+  color: var(--wa-text-secondary);
+  background: rgba(255,255,255,.85);
+  border-radius: 7.5px;
+  padding: 5px 12px;
+  margin: 10px 0;
+  box-shadow: 0 1px 1px rgba(0,0,0,.1);
+  font-weight: 500;
+}
+
+/* ── Bubbles ────────────────────────────────────────────── */
 .bubble {
-  max-width: 70%;
-  padding: 7px 10px;
-  border-radius: 8px;
+  max-width: 65%;
+  padding: 6px 9px 8px;
+  border-radius: 7.5px;
   position: relative;
   word-break: break-word;
-  box-shadow: 0 1px 1px rgba(0,0,0,.08);
+  box-shadow: 0 1px 1px rgba(0,0,0,.1);
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
+  margin-bottom: 2px;
 }
 
-.inbound  { background: var(--color-inbound);  align-self: flex-start; border-top-left-radius: 0; }
-.outbound { background: var(--color-outbound); align-self: flex-end;   border-top-right-radius: 0; }
+/* Inbound: white, left-aligned, tail top-left */
+.inbound {
+  background: var(--wa-bubble-in);
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
 
-.bubbleText { font-size: 14px; line-height: 1.4; }
+.inbound::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 0; height: 0;
+  border-top: 8px solid var(--wa-bubble-in);
+  border-left: 8px solid transparent;
+}
+
+/* Outbound: green, right-aligned, tail top-right */
+.outbound {
+  background: var(--wa-bubble-out);
+  align-self: flex-end;
+  border-top-right-radius: 0;
+}
+
+.outbound::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 0; height: 0;
+  border-top: 8px solid var(--wa-bubble-out);
+  border-right: 8px solid transparent;
+}
+
+.bubbleText {
+  font-size: 14.2px;
+  line-height: 1.45;
+  color: var(--wa-text-primary);
+  padding-right: 44px; /* make room for meta */
+}
 
 .bubbleMeta {
-  font-size: 10px;
-  color: var(--color-muted);
-  align-self: flex-end;
+  font-size: 11px;
+  color: var(--wa-text-secondary);
   display: flex;
+  align-items: center;
   gap: 3px;
-  align-items: center;
+  justify-content: flex-end;
+  margin-top: -14px; /* overlap with text bottom-right */
+  margin-right: -3px;
 }
 
-.status       { font-size: 11px; }
-.sent         { color: #aaa; }
-.delivered    { color: #aaa; }
-.read         { color: #53bdeb; }
-.failed       { color: var(--color-danger); }
+.bubbleTime { font-size: 11px; }
 
-/* ── Input row ──────────────────────────────────────── */
-.inputRow {
+/* ── Input bar ──────────────────────────────────────────── */
+.inputBar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
+  gap: 4px;
+  padding: 8px 16px;
+  background: var(--wa-input-bar-bg);
+  flex-shrink: 0;
 }
 
-.input {
-  flex: 1;
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  padding: 9px 14px;
-  font-size: 14px;
-  outline: none;
-  background: var(--color-bg);
-  transition: border .15s;
-}
-
-.input:focus { border-color: var(--color-primary); }
-
-.sendBtn {
+.inputIconBtn {
   width: 40px; height: 40px;
   border-radius: 50%;
-  background: var(--color-primary);
-  color: #fff;
   border: none;
-  font-size: 16px;
+  background: transparent;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: background .15s;
   flex-shrink: 0;
 }
 
-.sendBtn:hover:not(:disabled) { background: var(--color-primary-dk); }
+.inputIconBtn:hover { background: rgba(0,0,0,.06); }
+
+.input {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 15px;
+  color: var(--wa-text-primary);
+  background: var(--wa-surface);
+  outline: none;
+  resize: none;
+  font-family: inherit;
+}
+
+.input::placeholder { color: var(--wa-text-secondary); }
+
+.sendBtn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+  flex-shrink: 0;
+  color: var(--wa-icon);
+}
+
+.sendBtn:hover { background: rgba(0,0,0,.06); }
+
+.sendActive {
+  background: var(--wa-green) !important;
+  color: #fff;
+}
+
+.sendActive:hover { background: var(--wa-green-dk) !important; }
 .sendBtn:disabled { opacity: .5; cursor: not-allowed; }

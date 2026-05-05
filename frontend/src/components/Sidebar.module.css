@@ -1,54 +1,90 @@
-.sidebar {
-  width: var(--sidebar-w);
-  min-width: var(--sidebar-w);
-  background: var(--color-primary-dk);
-  color: #fff;
+.strip {
+  width: 72px;
+  min-width: 72px;
+  background: var(--wa-strip-bg);
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100vh;
+  border-right: 1px solid var(--wa-border-dark);
+  z-index: 10;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 20px 16px;
-  border-bottom: 1px solid rgba(255,255,255,.15);
-}
-
-.brandIcon { font-size: 24px; }
-
-.brandName {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -.3px;
-}
-
-.nav {
+.top {
+  padding: 14px 0 10px;
   display: flex;
   flex-direction: column;
-  padding: 12px 8px;
+  align-items: center;
   gap: 4px;
-  flex: 1;
+  border-bottom: 1px solid var(--wa-border-dark);
+  width: 100%;
+  padding-bottom: 12px;
 }
 
-.navItem {
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #00a884;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--radius);
-  color: rgba(255,255,255,.8);
-  text-decoration: none;
-  font-weight: 500;
-  transition: background .15s, color .15s;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity .15s;
 }
 
-.navItem:hover { background: rgba(255,255,255,.12); color: #fff; }
+.userAvatar:hover { opacity: .85; }
+
+.mid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  gap: 2px;
+}
+
+.bot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0 16px;
+  gap: 2px;
+}
+
+.navIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wa-icon-light);
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  position: relative;
+}
+
+.navIcon:hover {
+  background: rgba(255,255,255,.08);
+  color: var(--wa-icon-light-act);
+}
 
 .active {
-  background: rgba(255,255,255,.2) !important;
-  color: #fff !important;
+  color: var(--wa-icon-light-act) !important;
 }
 
-.navIcon { font-size: 16px; }
+.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 28px;
+  background: var(--wa-green);
+  border-radius: 0 2px 2px 0;
+}

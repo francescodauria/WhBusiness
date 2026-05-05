@@ -11,14 +11,15 @@ export default function App() {
     <BrowserRouter>
       <div className={styles.layout}>
         <Sidebar />
-        <main className={styles.main}>
+        <div className={styles.content}>
           <Routes>
-            <Route path="/"         element={<Dashboard />} />
-            <Route path="/chat"     element={<ChatPage />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="*"         element={<Navigate to="/" replace />} />
+            <Route path="/"          element={<Navigate to="/chat" replace />} />
+            <Route path="/chat"      element={<ChatPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/settings"  element={<Settings />} />
+            <Route path="*"          element={<Navigate to="/chat" replace />} />
           </Routes>
-        </main>
+        </div>
       </div>
     </BrowserRouter>
   );

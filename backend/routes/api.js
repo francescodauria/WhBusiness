@@ -108,4 +108,37 @@ router.post(
   },
 );
 
+// POST /api/calls/start  – initiate a WhatsApp voice/video call
+router.post(
+  '/calls/start',
+  [
+    body('phone').notEmpty().matches(/^\d{7,15}$/),
+    body('type').optional().isIn(['audio', 'video']),
+  ],
+  validate,
+  async (req, res) => {
+    const { phone, type = 'audio' } = req.body;
+    const url = `https://graph.facebook.com/${process.env.WHATSAPP_API_VERSION || 'v19.0'}/${process.env.WHATSAPP_PHONE_NUMBER_ID}/calls`;
+
+    try {
+      const response = await axios.post(url, {
+        messaging_product: 'whatsapp',
+        to: phone,
+        type,
+      }, {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log(`[calls] Initiated ${type} call to ${phone}`, response.data);
+      res.json({ success: true, call_id: response.data?.id, data: response.data });
+    } catch (err) {
+      const detail = err.response?.data || err.message;
+      console.error('[calls] WhatsApp API error:', detail);
+      return res.status(502).json({ error: 'Failed to initiate call via WhatsApp API', detail });
+    }
+  },
+);
+
 module.exports = router;

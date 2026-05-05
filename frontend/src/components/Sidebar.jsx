@@ -1,35 +1,49 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import Icon from './Icon';
 import styles from './Sidebar.module.css';
 
-const NAV = [
-  { to: '/',        label: 'Dashboard',      icon: '📊' },
-  { to: '/chat',    label: 'Conversazioni',  icon: '💬' },
-  { to: '/settings',label: 'Impostazioni',   icon: '⚙️' },
-];
+const AVATAR_COLORS = ['#00a884','#128c7e','#25d366','#34b7f1','#6bcbef'];
+
+function UserAvatar({ letter = 'W' }) {
+  return (
+    <div className={styles.userAvatar} title="Il tuo profilo">
+      <span>{letter}</span>
+    </div>
+  );
+}
+
+function NavIcon({ to, icon, label, end }) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      title={label}
+      className={({ isActive }) => `${styles.navIcon} ${isActive ? styles.active : ''}`}
+    >
+      <Icon name={icon} size={24} />
+    </NavLink>
+  );
+}
 
 export default function Sidebar() {
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.brand}>
-        <span className={styles.brandIcon}>📱</span>
-        <span className={styles.brandName}>WhBusiness</span>
+    <aside className={styles.strip}>
+      {/* Top: avatar */}
+      <div className={styles.top}>
+        <UserAvatar letter="W" />
       </div>
-      <nav className={styles.nav}>
-        {NAV.map(({ to, label, icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.active : ''}`
-            }
-          >
-            <span className={styles.navIcon}>{icon}</span>
-            <span>{label}</span>
-          </NavLink>
-        ))}
+
+      {/* Middle: main nav icons */}
+      <nav className={styles.mid}>
+        <NavIcon to="/chat"      icon="chat"      label="Chats"         />
+        <NavIcon to="/dashboard" icon="dashboard" label="Dashboard"     />
       </nav>
+
+      {/* Bottom: secondary icons */}
+      <div className={styles.bot}>
+        <NavIcon to="/settings" icon="settings" label="Impostazioni" />
+      </div>
     </aside>
   );
 }
